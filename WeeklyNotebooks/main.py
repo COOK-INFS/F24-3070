@@ -115,4 +115,59 @@ def clear_inputs():
 insert_button = ctk.CTkButton(master=window, text="Insert", command=insert_records)
 insert_button.grid(row=5, column=0, padx=10, pady=10)
 
+
+# ----------------------------- SEARCHING FOR RECORDS ----------------------------
+# Create a function to search for records
+def search_records():
+    studentID_var = studentID_input.get()
+    sql = "select * from students where studentID = %s"
+    val = (studentID_var,)
+    cursor.execute(sql, val)
+    record = cursor.fetchone()
+    if record:
+        lastName_input.delete(0, tk.END)
+        firstName_input.delete(0, tk.END)
+        email_input.delete(0, tk.END)
+        lastName_input.insert(0, record[1])
+        firstName_input.insert(0, record[2])
+        email_input.insert(0, record[3])
+
+# Create a button that will search for records
+search_button = ctk.CTkButton(master=window, text="Search", command=search_records)
+search_button.grid(row=4, column=0, padx=10, pady=10)
+
+
+# ----------------------------- UPDATING RECORDS ----------------------------
+# Create a function to update records
+def update_records():
+    studentID_var = studentID_input.get()
+    firstName_var = firstName_input.get()
+    lastName_var = lastName_input.get()
+    email_var = email_input.get()
+    sql = "update students set firstName = %s, lastName = %s, email = %s where studentID = %s"
+    val = (firstName_var, lastName_var, email_var, studentID_var)
+    cursor.execute(sql, val)
+    conn.commit()
+    clear_inputs()
+
+# Add a button to the UI to update records
+update_button = ctk.CTkButton(master=window, text="Update", command=update_records)
+update_button.grid(row=4, column=1, padx=10, pady=10)
+
+
+# ----------------------------- DELETING RECORDS ----------------------------
+# Create a function to delete records
+def delete_records():
+    studentID_var = studentID_input.get()
+    sql = "delete from students where studentID = %s"
+    val = (studentID_var,)
+    cursor.execute(sql, val)
+    conn.commit()
+    clear_inputs()
+
+# Create a button to delete records
+delete_button = ctk.CTkButton(master=window, fg_color="red", text="Delete", command=delete_records)
+delete_button.grid(row=5, column=1, padx=10, pady=10)
+   
+
 window.mainloop()
